@@ -1,35 +1,25 @@
 
 sudo git clone https://aur.archlinux.org/snapd.git
 sudo chmod +x snapd
-cd snapd
+sudo 
 makepkg -si
 sudo systemctl enable --now snapd.socket
 sudo ln -s /var/lib/snapd/snap /snap
+sudo pacman -Syyu gcc
+sudo snap install hello-world
+sudo snap install code --classic
+sudo pacman -Sy kitty
 
-
-if sudo snap install hello-world
-then 
-    echo "snap is installed!"
-
-
-fi
-
-if hello-world
-then 
-    echo "Hello World Worked !"
-
-fi
-
-if sudo snap install code --classic
-then
-    echo  "VS Code Installed"
-fi
-
-if sudo pacman -Sy kitty
-then
-    echo "Kitty Installed !'"
-
-fi
+sudo snap install prospect-mail
+sudo snap install teams-for-linux
+sudo snap install remmina
+sudo pacman -S virtualbox
+sudo gpasswd -a $USERS vboxusers
+sudo modprobe vboxdrv
+yay -Syy
+yay -S virtualbox-ext-oracle
+sudo systemctl enable vboxweb.service
+sudo systemctl start vboxweb.service
 
 
 echo $SHELL
