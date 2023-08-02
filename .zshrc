@@ -1,26 +1,30 @@
+
+source /opt/homebrew/opt/zinit/zinit.zsh
+export PATH=$PATH:/usr/local/bin
+export PATH=$PATH:/opt/homebrew/bin/
+export PATH=$PATH:'/System/Volumes/Data/Applications/Visual Studio Code.app/Contents/Resources/app/bin/'
+
 # Timothy Devon Morris .zshrc
 skip_global_compinit=1
 
 # If you aren't running a desktop manager like gdm, this file won't get loaded
 # So we will load it manually
-source $HOME/.profile
 
 # Skips the global compinit
 skip_global_compinit=1
 
 # Install zinit if not installed
-if [ ! -d "${HOME}/.zinit" ]; then
-  mkdir ${HOME}/.zinit
-	git clone https://github.com/zdharma/zinit ${HOME}/.zinit/bin
-	zcompile ${HOME}/.zinit/bin/zinit.zsh
-fi
+
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
 
 #AUTO_LS_COMMANDS=(ls git-status '/usr/bin/lsd --group-dirs first -al')
 #AUTO_LS_COMMANDS=('/usr/bin/lsd --group-dirs first -al' git-status)
 #AUTO_LS_NEWLINE=false
 
 ### Added by Zplugin's installer
-source "${HOME}/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
@@ -46,7 +50,7 @@ setopt promptsubst
 
 zp snippet OMZ::lib/theme-and-appearance.zsh
 zp snippet OMZ::lib/spectrum.zsh
-zp snippet OMZ::themes/pygmalion-virtualenv.zsh-theme
+zp snippet OMZ::themes/robbyrussell.zsh-theme
 
 
 ### Zplugins
@@ -98,13 +102,17 @@ alias pacman="sudo pacman"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
-alias repos="cd /media/hd0/doganakyildiz/repos"
-alias mail="exec prospect-mail & disown"
-alias teams="exec teams-for-linux & disown"
-alias vm="exec sudo virtualbox & disown"
-alias ls="ls -la"
-alias discord="exec /media/hd0/doganlibs/Discord/Discord & disown"
- 
+alias ls="ls -lart"
+alias pw="pwsh"
+alias files="cd ~/Desktop/files"
+alias works="cd ~/works/"
+alias dockerup="launchctl start gui/502/com.docker.helper"
+alias dckill='docker stop $(docker ps -a -q); docker rm $(docker ps -a -q)'
+alias c='clear'
+alias dcrmi='docker rmi -f $(docker images -aq)'
+alias dks='docker ps -a'
+
+
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 export FZF_CTRL_T_COMMAND='rg --files --hidden'
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
@@ -112,6 +120,7 @@ export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
 export PATH=$HOME/.local/bin:$PATH
 export PATH=/opt/rti_connext_dds-5.3.1/bin:$PATH
 export PATH=/snap/bin:$PATH
+
 
 #  Load fzf zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -123,10 +132,17 @@ function config {
    /usr/bin/git --git-dir=$HOME/.dots/ --work-tree=$HOME $@
 }
 
+DEFAULT_PROMPT=$PROMPT
 
-PATH="/home/utku2/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="/home/utku2/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/home/utku2/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/home/utku2/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/home/utku2/perl5"; export PERL_MM_OPT;
 
+alias ssh='env TERM=xterm-256color ssh' # allows kitty to work with ssh
+
+
+
+function virtualenv_info { 
+    [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
+}
+# base64 converter
+b64() {
+    echo -n "$1" | base64
+}
